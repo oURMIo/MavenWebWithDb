@@ -17,20 +17,56 @@ public class WebContent {
     UseForUser users;
 
     @GetMapping("/create/{name}")
-    public String indexMain(@PathVariable String name) {
+    public String indexAdd(@PathVariable String name) {
         User user = new User();
         user.setId(id);
         user.setName(name);
         users.save(user);
         id++;
-        return "create and add user with name - " + name;
+        return "Create and add user with name - " + name;
+    }
+
+    @GetMapping("/delete/{id}")
+    public String indexDeleteById(@PathVariable Long aId) {
+        for (User user : users.findAll()) {
+            if (aId.equals(user.getId())) {
+                String timeName = user.getName();
+                long timeId = user.getId();
+                users.delete(user);
+                replaceId();
+                return "Delete user with name - " + timeName + " and id " + timeId;
+            }
+        }
+        return "You made a mistake with the id ";
+    }
+
+    @GetMapping("/delete/name/{name}")
+    public String indexDeleteByName(@PathVariable String name) {
+        for (User user : users.findAll()) {
+            if (name.equals(user.getName())) {
+                String timeName = user.getName();
+                long timeId = user.getId();
+                users.delete(user);
+                replaceId();
+                return "Delete user with name - " + timeName + " and id " + timeId;
+            }
+        }
+        return "You made a mistake with the name ";
+    }
+
+    private void replaceId() {
+        id = 1;
+        for (User user : users.findAll()) {
+            user.setId(id);
+            id++;
+        }
     }
 
     @GetMapping("/show")
     public String indexForAll() {
-        return "\r\n"
+        return "\n\n"
                 + "   ALL USERS   - "
-                + "\r\n"
+                + "\n\n"
                 + users.findAll();
     }
 
