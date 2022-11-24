@@ -13,7 +13,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "User - [ " + getId() + ", " + getName() + " ]";
+        return name;
+    }
+
+    public String writeAll() {
+        return "[ id-" + id + ",name-" + name + " ]";
     }
 
     public long getId() {
