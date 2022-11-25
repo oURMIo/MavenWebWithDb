@@ -17,6 +17,14 @@
     <java.version>11</java.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>com.e-iceblue</id>
+      <name>e-iceblue</name>
+      <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -62,6 +70,18 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <!--  FOR DOC -->
+    <dependency>
+      <groupId>e-iceblue</groupId>
+      <artifactId>spire.doc.free</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.11.0</version>
     </dependency>
 
     <!--FROM ME END-->

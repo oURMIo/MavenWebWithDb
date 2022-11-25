@@ -3,12 +3,20 @@ package com.example.demo.web;
 import com.example.demo.database.UseForUser;
 import com.example.demo.database.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.spire.doc.Document;
+import com.spire.doc.FileFormat;
+import com.spire.doc.Section;
+import com.spire.doc.documents.BuiltinStyle;
+import com.spire.doc.documents.Paragraph;
+import com.spire.doc.documents.ParagraphStyle;
+import org.apache.commons.io.IOUtils;
 
-import javax.persistence.Id;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 @RestController
@@ -25,6 +33,23 @@ public class WebContent {
         user.setName(name);
         users.save(user);
         id++;
+
+        /*  Create doc  */
+        Document document = new Document();
+        Section section = document.addSection();
+        Paragraph subheading_1 = section.addParagraph();
+        subheading_1.appendText("List all users");
+        Paragraph para_1 = section.addParagraph();
+        para_1.appendText(users.findAll().toString());
+        subheading_1.applyStyle(BuiltinStyle.Heading_3);
+        ParagraphStyle style = new ParagraphStyle(document);
+        style.setName("paraStyle");
+        style.getCharacterFormat().setFontName("Arial");
+        style.getCharacterFormat().setFontSize(11f);
+        document.getStyles().add(style);
+        para_1.applyStyle("paraStyle");
+        document.saveToFile("./src/main/resources/file/listUsers.docx", FileFormat.Docx);
+
         return "Create and add user with name - " + name;
     }
 
@@ -73,11 +98,17 @@ public class WebContent {
                 + users.findAll();
     }
 
-/*    @GetMapping("/showall")
-    public String indexForAll2() {
-        return "   ALL USERS   - "
-                + users.writeAll();
-    }*/
+    /*"/file/listUsers.docx"*/
+    @GetMapping(value = "/listUsers")
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> indexExport(@RequestParam("docx") boolean docx) {
+        MediaType contentType = MediaType.ALL;
+        InputStream inputStream = getClass().getResourceAsStream("/file/listUsers.docx");
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                .body(new InputStreamResource(inputStream));
+    }
+
 
     @RequestMapping("*")
     public String indexAll() {
