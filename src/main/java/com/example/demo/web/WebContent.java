@@ -13,9 +13,7 @@ import com.spire.doc.Section;
 import com.spire.doc.documents.BuiltinStyle;
 import com.spire.doc.documents.Paragraph;
 import com.spire.doc.documents.ParagraphStyle;
-import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -104,11 +102,11 @@ public class WebContent {
     public ResponseEntity<InputStreamResource> indexExport(@RequestParam("docx") boolean docx) {
         MediaType contentType = MediaType.ALL;
         InputStream inputStream = getClass().getResourceAsStream("/file/listUsers.docx");
+        assert inputStream != null;
         return ResponseEntity.ok()
                 .contentType(contentType)
                 .body(new InputStreamResource(inputStream));
     }
-
 
     @RequestMapping("*")
     public String indexAll() {
