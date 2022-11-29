@@ -36,7 +36,7 @@ public class WebContent {
         Document document = new Document();
         Section section = document.addSection();
         Paragraph subheading_1 = section.addParagraph();
-        subheading_1.appendText("List all users");
+        subheading_1.appendText("List all users -");
         Paragraph para_1 = section.addParagraph();
         para_1.appendText(users.findAll().toString());
         subheading_1.applyStyle(BuiltinStyle.Heading_3);
@@ -97,14 +97,13 @@ public class WebContent {
     }
 
     /*"/file/listUsers.docx"*/
-    @GetMapping(value = "/listUsers")
+    @GetMapping(value = "/listUsers.docx")
     @ResponseBody
-    public ResponseEntity<InputStreamResource> indexExport(@RequestParam("docx") boolean docx) {
-        MediaType contentType = MediaType.ALL;
+    public ResponseEntity<InputStreamResource> indexExport() {
         InputStream inputStream = getClass().getResourceAsStream("/file/listUsers.docx");
         assert inputStream != null;
         return ResponseEntity.ok()
-                .contentType(contentType)
+                .contentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .body(new InputStreamResource(inputStream));
     }
 
