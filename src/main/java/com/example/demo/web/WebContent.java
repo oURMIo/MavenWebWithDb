@@ -2,18 +2,21 @@ package com.example.demo.web;
 
 import com.example.demo.database.UseForUser;
 import com.example.demo.database.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import com.spire.doc.Document;
 import com.spire.doc.FileFormat;
 import com.spire.doc.Section;
 import com.spire.doc.documents.BuiltinStyle;
 import com.spire.doc.documents.Paragraph;
 import com.spire.doc.documents.ParagraphStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.InputStream;
 
 
@@ -97,15 +100,32 @@ public class WebContent {
     }
 
     /*"/file/listUsers.docx"*/
-    @GetMapping(value = "/listUsers.docx")
-    @ResponseBody
-    public ResponseEntity<InputStreamResource> indexExport() {
-        InputStream inputStream = getClass().getResourceAsStream("/file/listUsers.docx");
+    @RequestMapping(value = "/listUsers.docx", method = RequestMethod.GET)
+    public ResponseEntity<Object> indexExport() {
+        String filePath = "/file/listUsers.docx";
+        InputStream inputStream = getClass().getResourceAsStream(filePath);
         assert inputStream != null;
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .body(new InputStreamResource(inputStream));
     }
+
+/*
+
+    private ForFiles forFiles = null;
+
+    @Autowired
+    public WebContent(ForFiles forFiles) {
+        this.forFiles = forFiles;
+    }
+
+    @GetMapping(value = "/listUsers.docx")
+    @ResponseBody
+    public ResponseEntity<Resource> indexExport() {
+        Resource resource = forFiles.loadAsResource("/file/listUsers.docx");
+        return ResponseEntity.ok().body(new InputStreamResource((InputStream) resource));
+    }
+*/
 
     @RequestMapping("*")
     public String indexAll() {
