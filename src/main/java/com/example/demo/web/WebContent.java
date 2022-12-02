@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.InputStream;
 
@@ -23,9 +24,13 @@ import java.io.InputStream;
 @RestController
 public class WebContent {
     private long id = 0;
+    protected String filePath = "./listUsers.docx";
 
     @Autowired
     UseForUser users;
+
+    @Autowired
+    ServletContext context;
 
     @GetMapping("/create/{name}")
     public String indexAdd(@PathVariable String name) {
@@ -49,7 +54,7 @@ public class WebContent {
         style.getCharacterFormat().setFontSize(11f);
         document.getStyles().add(style);
         para_1.applyStyle("paraStyle");
-        document.saveToFile("./src/main/resources/file/listUsers.docx", FileFormat.Docx);
+        document.saveToFile(context.getRealPath(filePath), FileFormat.Docx);
 
         return "Create and add user with name - " + name;
     }
@@ -102,30 +107,12 @@ public class WebContent {
     /*"/file/listUsers.docx"*/
     @RequestMapping(value = "/listUsers.docx", method = RequestMethod.GET)
     public ResponseEntity<Object> indexExport() {
-        String filePath = "/file/listUsers.docx";
-        InputStream inputStream = getClass().getResourceAsStream(filePath);
+        InputStream inputStream = context.getResourceAsStream(filePath);
         assert inputStream != null;
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .body(new InputStreamResource(inputStream));
     }
-
-/*
-
-    private ForFiles forFiles = null;
-
-    @Autowired
-    public WebContent(ForFiles forFiles) {
-        this.forFiles = forFiles;
-    }
-
-    @GetMapping(value = "/listUsers.docx")
-    @ResponseBody
-    public ResponseEntity<Resource> indexExport() {
-        Resource resource = forFiles.loadAsResource("/file/listUsers.docx");
-        return ResponseEntity.ok().body(new InputStreamResource((InputStream) resource));
-    }
-*/
 
     @RequestMapping("*")
     public String indexAll() {
